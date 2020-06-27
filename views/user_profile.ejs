@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/css/user_profile.css">
+
+<h1>Profile page</h1>
+
+<!-- <% if(user.id == profile_user.id){%> -->
+   <!-- if user open his own profile, show update form   --> 
+    <h4>Name : <%=profile_user.name%></h6>
+    <h4>Email : <%=profile_user.email%></h6>
+    <form action="/users/update/"  method="POST">
+        <input type="password" name="password" placeholder="New Password" required>
+        <input type="password" name="confirm_password" placeholder="Re enter the above Password" required>        
+        <input type="submit" value="Update">
+    </form>
+<!-- else just display user's name and email  
+<% }else{ %>
+
+    <p><%=profile_user.name%></p>
+    <p><%=profile_user.email%></p>
+
+
+<%}%> -->
