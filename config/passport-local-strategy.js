@@ -15,7 +15,7 @@ passport.use(new LocalStrategy({
                  req.flash('error',err);
                 return done(err);
             }
-
+            //using bcrypt to decrypt the password and compare
             if(!user || !bcrypt.compareSync(password, user.password)){
                  req.flash('error','Invalid Username/Password');
                 return done(null, false);

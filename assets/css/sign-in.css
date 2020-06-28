@@ -1,0 +1,24 @@
+.form-cntnr{
+    width: 400px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px auto;
+
+}
+h3{
+    margin: 30px;
+    text-align: center;
+}
+
+.form-group-cstm{
+    margin: 30px 20px;
+}
+
+.btn-cntnr{
+    text-align: center;
+}
+
+.other-sign-in a{
+    font-size: 15px;
+}

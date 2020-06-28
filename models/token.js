@@ -4,7 +4,7 @@ const tokenSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    //comment belongs to a user
+    //token belons to a user
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

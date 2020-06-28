@@ -18,17 +18,6 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// userSchema.pre('save', function(next) {
-//     if (this.password) {
-//         this.salt = new Buffer(
-//           crypto.randomBytes(16).toString('base64'), 
-//           'base64'
-//         );
-//         this.password = crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
-        
-//     };
-//     next();
-// });
 
 const User = mongoose.model('User',userSchema);
 module.exports = User;

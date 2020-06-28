@@ -1,21 +1,44 @@
 <link rel="stylesheet" href="/css/user_profile.css">
 
-<h1>Profile page</h1>
-
-<!-- <% if(user.id == profile_user.id){%> -->
-   <!-- if user open his own profile, show update form   --> 
-    <h4>Name : <%=profile_user.name%></h6>
-    <h4>Email : <%=profile_user.email%></h6>
-    <form action="/users/update/"  method="POST">
-        <input type="password" name="password" placeholder="New Password" required>
-        <input type="password" name="confirm_password" placeholder="Re enter the above Password" required>        
-        <input type="submit" value="Update">
-    </form>
-<!-- else just display user's name and email  
-<% }else{ %>
-
-    <p><%=profile_user.name%></p>
-    <p><%=profile_user.email%></p>
 
 
-<%}%> -->
+
+    
+    <div class="form-cntnr">
+        <h3>Profile
+            <i class="fas fa-users"></i> 
+        </h3>
+        <form action="/users/update/"  method="POST">
+            
+            <div class="form-group form-group-cstm row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="<%=profile_user.name%>">
+                </div>
+            </div>
+            <div class="form-group form-group-cstm row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="<%=profile_user.email%>">
+                </div>
+            </div>
+            <div class="center-text">
+                <h4>Update password</h4>
+            </div>
+            <div class="form-group form-group-cstm">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password" required>
+            </div>
+            <div class="form-group form-group-cstm">
+                  <label for="ConfirmPassword"> Confirm Password</label>
+                  <input type="password" class="form-control" id="ConfirmPassword"name="confirm_password" placeholder="Confirm Password" required>
+            </div>
+            <div class="btn-cntnr">
+                <button type="submit" class="btn btn-primary btn-custom">Update</button>
+            </div>
+          </form>
+          
+
+    </div>
+
+ 

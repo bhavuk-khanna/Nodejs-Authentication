@@ -4,7 +4,6 @@ const app = express();
 const port = 8000;
 const expressLayouts = require('express-ejs-layouts');
 const db = require('./config/mongoose');
-//used for session cookie 
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
@@ -12,7 +11,8 @@ const passportGoogle = require('./config/passport-google-oauth2-stratergy');
 const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const customMware = require('./config/middleware');
-
+const bodyParser = require('body-parser');
+const request = require('request');
 
 //middlewares 
 app.use(express.urlencoded());
@@ -22,13 +22,15 @@ app.use(cookieParser());
 //use the assets folder for static files 
 app.use(express.static('./assets'));
 
+// for captcha
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json());
 
-
-// use express layouts
+//  express layouts
 app.use(expressLayouts);
 
 
-//extrat style and scripts from sub pages into the layout
+//extract style and scripts from sub pages into the layout
 
 app.set('layout extractStyles', true);
 app.set('layout extractScripts', true);
@@ -61,6 +63,7 @@ app.use(session({
 })
 );
 
+//using passport
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
@@ -75,9 +78,10 @@ app.use(customMware.setFlash);
 app.use("/",require('./routes'));
 
 
+
 app.listen(port,function(err){
     if(err)
         console.log("Error Starting the server");
     
-    console.log('Server has been started');
+    console.log(`Server is running at port: ${port}`);
 });

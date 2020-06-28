@@ -22,6 +22,7 @@
   "homepage": "https://github.com/bhavuk-khanna/Nodejs-Authentication#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.5",
@@ -30,11 +31,11 @@
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "express-session": "^1.17.1",
-    "local": "^0.3.3",
     "mongoose": "^5.9.20",
     "nodemailer": "^6.4.10",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "request": "^2.88.2"
   }
 }

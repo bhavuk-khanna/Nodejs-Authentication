@@ -4,7 +4,7 @@ const passport = require('passport');
 
 const usersController = require('../controllers/users_controller')
 
-router.get("/",usersController.users);
+
 router.get("/signup",usersController.signUp);
 router.get("/signin",usersController.signIn);
 router.post("/create", usersController.create);
@@ -30,4 +30,5 @@ router.get('/auth/google', passport.authenticate('google',{scope: ['profile','em
 router.get('/auth/google/callback/',passport.authenticate('google', {failureRedirect: 'users/sign-in'}), usersController.createSession);
 
 
+router.post("/captcha",usersController.captcha);
 module.exports = router;

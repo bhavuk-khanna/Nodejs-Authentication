@@ -5,14 +5,12 @@ const path =require('path');
 const bcrypt = require('bcryptjs');
 const resetPasswordMailer = require('../mailers/reset-password-mailer');
 const crypto = require('crypto');
-module.exports.users = function(req,res){
-    res.render('users',{
-        title: "users"
-    });
-}
+const request = require('request');
+const secretKey = '6LeQgqoZAAAAAG_6NOiEolLB9nfW62Vah_1O8i_y';
 
 module.exports.signUp = function(req,res){
     if(req.isAuthenticated()){
+
         return res.redirect('/users/profile');
     }
     
@@ -46,7 +44,7 @@ module.exports.profile = function(req,res){
 }
 
 
-//get the sign up data
+//creates a new user
 module.exports.create = async function(req, res){
    
     if(req.body.password != req.body.confirm_password){
@@ -123,10 +121,8 @@ module.exports.changePassword = async function(req,res){
             if(req.body.password != req.body.confirm_password){
                 req.flash('error', 'Pasword does not match!');
                 return res.redirect('back');
-            }
-            console.log(token.user);
-            let user = await User.findById(token.user);
-            console.log(user);
+            }            
+            let user = await User.findById(token.user);            
             let salt = await bcrypt.genSalt(10);
             let hash = await bcrypt.hash(req.body.password, salt);
             user.password = hash;
@@ -191,7 +187,6 @@ module.exports.reset = async function(req,res){
         }
         else{
             //send password reset email
-            // resetPassword.newComment(user);
             let token = await Token.create({
                 token: crypto.randomBytes(20).toString('hex'),
                 user: user.id,
@@ -199,10 +194,8 @@ module.exports.reset = async function(req,res){
             });
 
             token = await Token.findOne({token: token.token}).populate('user');
-            
-
-            resetPasswordMailer.resetPassword(token);
-
+             resetPasswordMailer.resetPassword(token);
+            req.flash('success', 'Password reset email sent!');
             return res.redirect('back');
         }
     }
@@ -216,11 +209,45 @@ module.exports.reset = async function(req,res){
 
 
 //logout
-module.exports.destroySession = function(req,res){
+module.exports.destroySession = function(req,res){    
+    req.flash('Success', 'Logged out successfully');
     req.logout();
-     req.flash('success', 'You have logged out!');
     return res.redirect('/');
 }
 
 
+// verifies captcha sent by client before submitting the form
+module.exports.captcha = function(req,res){
+    console.log('we are here!');  
+    if(!req.body.captcha){
+        console.log("err");
+        req.flash('error','invalid capthca');
+        return res.json({"success":false, "msg":"Capctha is not checked"});
+       
+    }
+
+    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${req.body.captcha}`;
+
+    request(verifyUrl,(err,response,body)=>{
+
+        if(err){console.log(err); }
+
+        body = JSON.parse(body);
+
+        if(!body.success && body.success === undefined){
+            return res.json({"success":false, "msg":"captcha verification failed"});
+        }
+        else if(body.score < 0.5){
+
+            return res.json({"success":false, "msg":"you might be a bot, sorry!", "score": body.score});
+            
+        }
+        
+            // return json message or continue with your function. Example: loading new page, ect
+            req.flash('success','catcha verfied');
+            return res.json({"success":true, "msg":"captcha verification passed", "score": body.score});
+
+    })
+  
+}
 
