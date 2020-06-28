@@ -13,7 +13,7 @@ The functionalities include:
 5. Google login/signup
 6. Forgot password: token based valid for 5 mins
 7. Google reCaptcha v3 verification
-8. flash notifications
+8. Flash notifications
 
 
 ## Using the project
@@ -24,10 +24,21 @@ The functionalities include:
 ```
 npm install <dependency name>
 ```
-5. Configure google authetication by adding client id and client secret in the`config->passport-google-oauth2-stratergy.js` file
-   -To Configure your own clinet id and secret, please refer: [Google developer docs](https://developers.google.com/adwords/api/docs/guides/authentication#create_a_client_id_and_client_secret).
-6. Go to https://localhost/8000 on your browser to use the application
-7. Have Fun!! 👍
+5. Configure google authetication by adding **client id** and **client secret** in the`config->passport-google-oauth2-stratergy.js` file
+   - To configure your own clinet id and secret, please refer: [Google developer docs](https://developers.google.com/adwords/api/docs/guides/authentication#create_a_client_id_and_client_secret).
+6. Configure mailer:
+   - Add **username** and **password** for the email address being used for sending the email in the`config->nodemailer.js` file  
+   - Add the from email address in `config->nodemailer.js`
+7. Configure captcha:
+   - To configure your own keys, please refer: [google reCAPTCHA](https://www.google.com/recaptcha/admin/create).
+   - Add the captcha **site key** in the   `assets->js->signin.js and signup.js`
+   - Add the captcha **secret key** in the `controllers\users_controller.js` in the *secret key const*
+
+8.  
+```
+npm start
+```
+9. Have Fun!! 👍 :beer:
 
 
 
