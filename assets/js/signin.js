@@ -3,7 +3,7 @@ console.log('script is loaded');
 let onSubmit = async function (e){
     e.preventDefault();
     
-    let token = await grecaptcha.execute('6LeQgqoZAAAAAIZG3GChwyuvOP1b0dMdw2mYZd1s', {action: 'homepage'})
+    let token = await grecaptcha.execute(''/*insert captcha site key here */, {action: 'homepage'})
     const captcha = token;
     console.log(captcha);
     let response = await fetch('/users/captcha',{

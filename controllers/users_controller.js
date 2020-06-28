@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const resetPasswordMailer = require('../mailers/reset-password-mailer');
 const crypto = require('crypto');
 const request = require('request');
-const secretKey = '6LeQgqoZAAAAAG_6NOiEolLB9nfW62Vah_1O8i_y';
+const secretKey = '' /* insert captcha secret key here*/;
 
 module.exports.signUp = function(req,res){
     if(req.isAuthenticated()){
