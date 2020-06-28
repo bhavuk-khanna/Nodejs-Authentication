@@ -1,8 +1,10 @@
 const User = require('../models/user');
+const Token = require('../models/token');
 const fs = require('fs');
 const path =require('path');
 const bcrypt = require('bcryptjs');
-const { Console } = require('console');
+const resetPasswordMailer = require('../mailers/reset-password-mailer');
+const crypto = require('crypto');
 module.exports.users = function(req,res){
     res.render('users',{
         title: "users"
@@ -83,6 +85,65 @@ module.exports.createSession = function(req, res){
 
 
 
+//displays the reset password screen if the token is valid
+module.exports.updatePassword = async function(req,res){
+
+    try{
+        let token = await Token.findOne({token: req.params.id});
+        //calculates time passed since token creation in mins
+        let timePassed = (new Date() - token.createdAt)/(1000*60);
+        // token should be at max 5 mins old
+        if(token && token.isValid && timePassed<5){
+            return res.render('user-change-password',{id: req.params.id});
+        }
+        else{
+            token.isValid = false;
+            token.save();
+            return res.render('invalid_token');
+        }
+    }
+    catch(err){
+        console.log('Error in displayng the reset password screen'+err);
+    }
+}
+
+// change password from password reset email
+
+module.exports.changePassword = async function(req,res){
+    try{
+        let token = await Token.findOne({token: req.params.id});
+        //calculates time passed since token creation in mins
+        let timePassed = (new Date() - token.createdAt)/(1000*60);
+        if(timePassed>5){token.isValid=false;token.save()};
+        if(!token || !token.isValid){
+            return res.render('invalid_token');
+            
+        }
+        else{
+            if(req.body.password != req.body.confirm_password){
+                req.flash('error', 'Pasword does not match!');
+                return res.redirect('back');
+            }
+            console.log(token.user);
+            let user = await User.findById(token.user);
+            console.log(user);
+            let salt = await bcrypt.genSalt(10);
+            let hash = await bcrypt.hash(req.body.password, salt);
+            user.password = hash;
+            token.isValid = false;
+            user.save();
+            token.save();
+            req.flash('Success', 'Password updated');
+            return res.redirect('/users/signin');
+        }
+    }
+    catch(err){
+        console.log('Error'+err);
+        req.flash('error','error');
+        return res.redirect('back');
+    }
+}
+
 // update password after login
 module.exports.update = async function(req,res){
     try{
@@ -113,6 +174,48 @@ module.exports.update = async function(req,res){
     
 }
 
+
+//display  forget password screen
+module.exports.forgetPassword = function(req,res){
+    return res.render('user-forget-password');
+}
+
+
+//finds user by email entered and sends a password reset email
+module.exports.reset = async function(req,res){
+    try{
+    let user = await User.findOne({email: req.body.email});
+        if(!user){
+            req.flash('error', 'User not found');
+            return res.redirect('back');
+        }
+        else{
+            //send password reset email
+            // resetPassword.newComment(user);
+            let token = await Token.create({
+                token: crypto.randomBytes(20).toString('hex'),
+                user: user.id,
+                isValid: true
+            });
+
+            token = await Token.findOne({token: token.token}).populate('user');
+            
+
+            resetPasswordMailer.resetPassword(token);
+
+            return res.redirect('back');
+        }
+    }
+    catch(err){
+        console.log('Error'+err);
+        req.flash('error','error');
+        return res.redirect('back');
+    }
+}
+
+
+
+//logout
 module.exports.destroySession = function(req,res){
     req.logout();
      req.flash('success', 'You have logged out!');

@@ -20,7 +20,11 @@ usersController.createSession);
 
 router.get('/sign-out',usersController.destroySession);
 
+router.get('/forget-password',usersController.forgetPassword);
+router.post('/reset',usersController.reset);
 
+router.get('/resetPassword/:id',usersController.updatePassword);
+router.post('/resetPassword/:id',usersController.changePassword);
 
 router.get('/auth/google', passport.authenticate('google',{scope: ['profile','email']}));
 router.get('/auth/google/callback/',passport.authenticate('google', {failureRedirect: 'users/sign-in'}), usersController.createSession);
